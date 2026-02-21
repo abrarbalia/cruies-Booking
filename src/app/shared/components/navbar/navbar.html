@@ -1,0 +1,42 @@
+<nav class="ocean-navbar">
+  <div class="navbar-container">
+    <!-- Logo & Brand -->
+    <a class="navbar-brand" routerLink="/">
+      <span class="anchor-logo">⚓</span>
+      <span class="brand-name">Ocean Crown</span>
+    </a>
+
+    <!-- Desktop Menu -->
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a routerLink="/" routerLinkActive="active" class="nav-link">Home</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/cruises" routerLinkActive="active" class="nav-link">Cruises</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/my-bookings" routerLinkActive="active" class="nav-link">My Booking</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a routerLink="/profile" routerLinkActive="active" class="nav-link dropdown-toggle">Profile</a>
+        <ul class="dropdown-menu">
+          <li><a routerLink="/profile" class="dropdown-link">Dashboard</a></li>
+          <li><a routerLink="/profile/settings" class="dropdown-link">Settings</a></li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/login" routerLinkActive="active" class="nav-link btn-outline">Login</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/register" class="nav-link btn-primary">Register</a>
+      </li>
+    </ul>
+
+    <!-- Mobile Toggle -->
+    <button class="mobile-toggle" #toggle>
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</nav>
