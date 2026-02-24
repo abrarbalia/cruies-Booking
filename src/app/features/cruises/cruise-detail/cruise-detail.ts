@@ -9,7 +9,11 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./cruise-detail.css']
 })
 export class CruiseDetailComponent {
+  activeTab: string = 'overview';   // default tab
 
+  setTab(tab: string) {
+    this.activeTab = tab;
+  }
   cruise = {
     title: "Hawaiian Island Escape",
     ship: "MS Pacific Breeze",
@@ -20,6 +24,37 @@ export class CruiseDetailComponent {
     price: "$1,199",
     image: "assets/cruise-hero.jpg",
     description: "Discover the enchanting Hawaiian islands with lush forests and crystal waters.",
+
+    itinerary: [
+      "Departure from Honolulu Port",
+      "Maui Island Exploration",
+      "Kona Beach & Snorkeling",
+      "Hilo Volcano Tour",
+      "Kauai Garden Island",
+      "Onboard Entertainment",
+      "Return to Honolulu"
+    ],
+
+    amenities: [
+      "Infinity Pool",
+      "Luxury Spa",
+      "Casino Lounge",
+      "Broadway Theater",
+      "Kids Club",
+      "Fitness Center",
+      "Fine Dining Restaurants"
+    ],
+    route: {
+      from: "Honolulu",
+      to: "Honolulu",
+      stops: [
+        { name: "Honolulu", x: 20, y: 55 },
+        { name: "Maui", x: 35, y: 60 },
+        { name: "Kona", x: 55, y: 58 },
+        { name: "Hilo", x: 65, y: 62 },
+        { name: "Kauai", x: 15, y: 40 }
+      ]
+    },
     cabins: [
       {
         name: "Interior",
@@ -41,5 +76,6 @@ export class CruiseDetailComponent {
       }
     ]
   };
+
 
 }

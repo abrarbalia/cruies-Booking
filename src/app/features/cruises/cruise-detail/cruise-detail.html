@@ -11,6 +11,7 @@
   </div>
 </div>
 
+<!-- GOOGLE MAP ROUTE -->
 
 <!-- MAIN CONTENT -->
 <div class="detail-container">
@@ -20,31 +21,53 @@
 
     <!-- INFO BAR -->
     <div class="info-bar">
-      <div class="info-item">
-        📅 <span>{{cruise.date}}</span>
-      </div>
-      <div class="info-item">
-        📍 <span>{{cruise.port}}</span>
-      </div>
-      <div class="info-item">
-        ⏱ <span>{{cruise.nights}} Nights</span>
-      </div>
-      <div class="info-item">
-        ⭐ <span>{{cruise.rating}}</span>
-      </div>
+      <div class="info-item">📅 {{cruise.date}}</div>
+      <div class="info-item">📍 {{cruise.port}}</div>
+      <div class="info-item">⏱ {{cruise.nights}} Nights</div>
+      <div class="info-item">⭐ {{cruise.rating}}</div>
     </div>
 
     <!-- TABS -->
     <div class="tabs">
-      <button class="active">Overview</button>
-      <button>Itinerary</button>
-      <button>Amenities</button>
+      <button [class.active]="activeTab==='overview'" (click)="setTab('overview')">
+        Overview
+      </button>
+
+      <button [class.active]="activeTab==='itinerary'" (click)="setTab('itinerary')">
+        Itinerary
+      </button>
+
+      <button [class.active]="activeTab==='amenities'" (click)="setTab('amenities')">
+        Amenities
+      </button>
     </div>
 
-    <!-- ABOUT -->
-    <div class="about">
-      <h3>About This Cruise</h3>
-      <p>{{cruise.description}}</p>
+    <!-- TAB CONTENT -->
+    <div class="tab-content">
+
+      <!-- OVERVIEW -->
+      <div *ngIf="activeTab==='overview'" class="about">
+        <h3>About This Cruise</h3>
+        <p>{{cruise.description}}</p>
+      </div>
+
+      <!-- ITINERARY -->
+      <div *ngIf="activeTab==='itinerary'" class="itinerary">
+        <h3>Cruise Itinerary</h3>
+
+        <div class="day" *ngFor="let day of cruise.itinerary; let i=index">
+          <div class="day-title">Night {{i+1}}</div>
+          <div class="day-desc">{{day}}</div>
+        </div>
+      </div>
+
+      <!-- AMENITIES -->
+      <div *ngIf="activeTab==='amenities'" class="amenities">
+        <div class="amenity" *ngFor="let a of cruise.amenities">
+          ✔ {{a}}
+        </div>
+      </div>
+
     </div>
 
     <!-- CABINS -->
@@ -62,7 +85,6 @@
           <span>per person</span>
         </div>
       </div>
-
     </div>
 
   </div>
@@ -74,7 +96,6 @@
     <div class="per">per person</div>
 
     <button class="select-btn">Select Cabin</button>
-
     <div class="note">✔ Free cancellation</div>
   </div>
 
