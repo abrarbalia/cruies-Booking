@@ -1,0 +1,41 @@
+<div class="recent-bookings">
+
+<h3>Recent Bookings</h3>
+
+<table>
+
+<thead>
+<tr>
+
+<th>Passenger</th>
+<th>Cruise</th>
+<th>Amount</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr *ngFor="let booking of bookings">
+
+
+
+<td>{{ booking.passenger }}</td>
+
+<td>{{ booking.cruise }}</td>
+
+<td>₹{{ booking.amount }}</td>
+
+<td>
+<span class="status" [ngClass]="booking.status">
+{{ booking.status }}
+</span>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>

@@ -1,9 +1,12 @@
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CruiseService } from '../../../../services/cruise.service';
 import { BookingService } from '../../../../services/booking.service';
+import { OfferService } from '../../../../services/offer.service';
 import { FormsModule } from '@angular/forms';
+
 @Component({
   standalone: true,
   imports: [CommonModule, FormsModule],
@@ -14,28 +17,37 @@ export class SelectCabin implements OnInit {
 
   cruise: any;
   selectedCabin: any;
+
   passengerCount = 1;
   passengers: any[] = [];
-  bookingId: string = '';
+
   basePrice = 0;
   tax = 0;
   portFee = 2000;
   total = 0;
 
+  // Coupon
+  couponCode: string = '';
+  discount: number = 0;
+  appliedOffer: any = null;
+
   constructor(
     private route: ActivatedRoute,
     private cruiseService: CruiseService,
     private bookingService: BookingService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private offerService: OfferService
+  ) {}
 
   async ngOnInit() {
+
     const id = this.route.snapshot.paramMap.get('cruiseId');
 
     if (id) {
       this.cruise = await this.cruiseService.getCruiseById(id);
       this.bookingService.setCruise(this.cruise);
     }
+
   }
 
   selectCabin(cabin: any) {
@@ -44,6 +56,7 @@ export class SelectCabin implements OnInit {
   }
 
   calculatePrice() {
+
     if (!this.selectedCabin) return;
 
     this.basePrice =
@@ -51,47 +64,82 @@ export class SelectCabin implements OnInit {
       this.selectedCabin.priceMultiplier *
       this.passengerCount;
 
-    this.tax = this.basePrice * 0.10;
-    this.total = this.basePrice + this.tax + this.portFee;
+    let discountedPrice = this.basePrice;
+
+    if (this.appliedOffer) {
+
+      if (this.appliedOffer.discountType === 'percentage') {
+        this.discount =
+          this.basePrice * (this.appliedOffer.discountValue / 100);
+      }
+
+      if (this.appliedOffer.discountType === 'flat') {
+        this.discount = this.appliedOffer.discountValue;
+      }
+
+      discountedPrice = this.basePrice - this.discount;
+    }
+
+    this.tax = discountedPrice * 0.10;
+
+    this.total = discountedPrice + this.tax + this.portFee;
 
     this.bookingService.setCabin(this.selectedCabin);
     this.bookingService.setTotal(this.total);
-  }
-continue() {
 
-  if (!this.selectedCabin) return;
-
-  // Create real passenger objects
-  const passengersArray = [];
-
-  for (let i = 0; i < this.passengerCount; i++) {
-    passengersArray.push({
-      firstName: '',
-      lastName: '',
-      dob: '',
-      passport: ''
-    });
   }
 
-  // Save properly
-  this.bookingService.setPassengers(passengersArray);
+  async applyCoupon() {
 
-  this.router.navigate([
-    '/booking',
-    this.cruise.id,
-    'passengers'
-  ]);
-}
-updatePassengers() {
-  this.passengers = [];
+    if (!this.couponCode.trim()) {
+      alert("Enter coupon code");
+      return;
+    }
 
-  for (let i = 0; i < this.passengerCount; i++) {
-    this.passengers.push({
-      name: '',
-      age: '',
-      gender: ''
-    });
+    const offers = await this.offerService.getOffers();
+
+    const found = offers.find((o: any) =>
+      o.couponCode?.toLowerCase() === this.couponCode.trim().toLowerCase() &&
+      o.isActive === true
+    );
+
+    if (!found) {
+      alert("Invalid Coupon Code");
+      return;
+    }
+
+   this.appliedOffer = found;
+
+this.calculatePrice();
+
+this.bookingService.setOffer(found);
+this.bookingService.setDiscount(this.discount);
+
+alert("Coupon Applied Successfully");
   }
-}
+
+  continue() {
+
+    if (!this.selectedCabin) return;
+
+    const passengersArray = [];
+
+    for (let i = 0; i < this.passengerCount; i++) {
+      passengersArray.push({
+        firstName: '',
+        lastName: '',
+        dob: '',
+        passport: ''
+      });
+    }
+
+    this.bookingService.setPassengers(passengersArray);
+
+    this.router.navigate([
+      '/booking',
+      this.cruise.id,
+      'passengers'
+    ]);
+  }
 
 }
