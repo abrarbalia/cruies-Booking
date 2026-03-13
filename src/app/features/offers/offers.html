@@ -1,8 +1,7 @@
 <section class="promo-hero">
   <img
     src="https://cordelia-cms-prod.s3.ap-south-1.amazonaws.com/sailnow_paylater_midscroll_banner_mobile_7e4986c96a.webp"
-    alt="Sail Now Pay Later"
-  />
+    alt="Sail Now Pay Later" />
 </section>
 
 <section class="offer-section">
@@ -28,9 +27,12 @@
           <p *ngIf="offer.couponCode">
             Coupon: <strong>{{ offer.couponCode }}</strong>
           </p>
-          
+
           <button (click)="copyCoupon(offer.couponCode)">Copy</button>
         </div>
+        <button (click)="applyOffer(offer)">
+          View Details
+        </button>
       </div>
 
     </div>

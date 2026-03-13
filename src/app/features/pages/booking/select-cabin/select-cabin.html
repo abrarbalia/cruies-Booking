@@ -110,7 +110,20 @@
         </div>
 
         <hr>
+        <!-- COUPON SECTION -->
+        <div class="coupon-box">
 
+            <input type="text" [(ngModel)]="couponCode" placeholder="Enter coupon code">
+
+            <button (click)="applyCoupon()">Apply</button>
+
+        </div>
+
+        <!-- SHOW DISCOUNT -->
+        <div class="summary-item" *ngIf="discount > 0">
+            <span>Discount</span>
+            <span style="color:green">- ₹ {{ discount | number }}</span>
+        </div>
         <div class="total">
             ₹ {{ total | number }}
         </div>
@@ -120,5 +133,5 @@
         </button>
 
     </div>
-    
+
 </div>

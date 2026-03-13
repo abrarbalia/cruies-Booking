@@ -50,28 +50,39 @@ export const routes: Routes = [
       import('./features/auth/signin/signin')
         .then(m => m.Signin)
   },
+
   {
     path:'booking/:cruiseId',
     loadComponent: () =>
       import('./features/pages/booking/select-cabin/select-cabin')
         .then(m => m.SelectCabin)
   },
+
   {
     path:'booking/:cruiseId/passengers',
     loadComponent: () =>
       import('./features/pages/booking/passengers/passengers')
         .then(m => m.Passengers)
   },
+
   {
      path:'booking/:cruiseId/confirm',
      loadComponent: () =>
        import('./features/pages/booking/confirm/confirm')
          .then(m => m.Confirm)
   },
+
   {
     path: 'ticket/:id',
     loadComponent: () =>
       import('./features/pages/booking/ticket/ticket')
         .then(m => m.Ticket)
-  }
+  },
+
+{
+  path: 'admin',
+  loadChildren: () =>
+    import('./Admin/admin/admin-routing-module')
+      .then(m => m.AdminRoutingModule)
+}
 ];

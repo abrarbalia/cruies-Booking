@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CruiseService } from '../../../services/cruise.service';
-import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-cruise-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './cruise-detail.html',
   styleUrls: ['./cruise-detail.css']
 })
@@ -16,32 +16,35 @@ export class CruiseDetail implements OnInit {
   cruise: any;
   loading = true;
 
-  // 🔥 NEW VARIABLES
   selectedCabin: any = null;
   finalPrice: number = 0;
 
- constructor(
-  private route: ActivatedRoute,
-  private cruiseService: CruiseService,
-  private router: Router
-) {}
-
+  constructor(
+    private route: ActivatedRoute,
+    private cruiseService: CruiseService,
+    private router: Router
+  ) {}
 
   setTab(tab: string) {
     this.activeTab = tab;
   }
 
   async ngOnInit() {
+
     const id = this.route.snapshot.paramMap.get('id');
 
     if (id) {
+
+      // get cruise data
       this.cruise = await this.cruiseService.getCruiseById(id);
 
-      // 🔥 Auto select first cabin after data loads
+      // attach id manually (important for firebase docs)
+      this.cruise.id = id;
+
+      // auto select first cabin
       if (this.cruise?.cabins?.length) {
         this.selectCabin(this.cruise.cabins[0]);
       } else {
-        // fallback if no cabins
         this.finalPrice = this.cruise?.price || 0;
       }
     }
@@ -49,14 +52,27 @@ export class CruiseDetail implements OnInit {
     this.loading = false;
   }
 
-  // 🔥 Cabin Selection Logic
+  // select cabin
   selectCabin(cabin: any) {
     this.selectedCabin = cabin;
     this.finalPrice = this.cruise.price * cabin.priceMultiplier;
   }
 
-    goToBooking() {
-  this.router.navigate(['/booking', this.cruise.id]);
-}
+  // navigate to booking
+  goToBooking() {
+
+    if (!this.cruise?.id) {
+      console.error('Cruise ID missing');
+      return;
+    }
+
+    this.router.navigate(['/booking', this.cruise.id], {
+      state: {
+        cabin: this.selectedCabin,
+        price: this.finalPrice
+      }
+    });
+
+  }
 
 }

@@ -1,0 +1,34 @@
+<div class="dashboard-container">
+
+  <!-- Stats Cards -->
+  <section class="stats-cards">
+    <app-stats-cards
+      [totalCruises]="totalCruises"
+      [totalUsers]="totalUsers"
+      [totalBookings]="totalBookings"
+      [totalRevenue]="totalRevenue">
+    </app-stats-cards>
+  </section>
+
+  <!-- Dashboard Widgets -->
+  <section class="dashboard-widgets">
+
+    <div class="widget">
+      <app-recent-bookings></app-recent-bookings>
+    </div>
+
+    <div class="widget">
+      <app-cruise-status></app-cruise-status>
+    </div>
+
+    <div class="widget">
+      <app-active-offers></app-active-offers>
+    </div>
+
+    <div class="widget">
+      <app-checkin-summary></app-checkin-summary>
+    </div>
+
+  </section>
+
+</div>

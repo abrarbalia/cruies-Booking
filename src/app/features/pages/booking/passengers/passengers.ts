@@ -20,7 +20,7 @@ export class Passengers implements OnInit {
   tax = 0;
   portFee = 2000;
   total = 0;
-
+  discount = 0;
   passengers: any[] = [];
   emergencyContact: any = {
     name: '',
@@ -35,47 +35,49 @@ export class Passengers implements OnInit {
 
   ngOnInit() {
 
-  const booking = this.bookingService.getBooking();
+    const booking = this.bookingService.getBooking();
 
-  if (!booking.cruise || !booking.cabin) {
-    this.router.navigate(['/']);
-    return;
+    this.discount = booking.discount || 0;
+    if (!booking.cruise || !booking.cabin) {
+      this.router.navigate(['/']);
+      return;
+    }
+
+    this.cruise = booking.cruise;
+    this.cabin = booking.cabin;
+
+    const count = booking.passengers?.length || 1;
+
+    this.passengerCount = count;
+
+    this.basePrice =
+      this.cruise.price *
+      this.cabin.priceMultiplier *
+      count;
+
+    this.tax = this.basePrice * 0.10;
+    this.total = booking.totalAmount;
+
+    this.generatePassengers(count);
+
   }
 
-  this.cruise = booking.cruise;
-  this.cabin = booking.cabin;
+  generatePassengers(count: number) {
 
-  const count = booking.passengers?.length || 1;
+    this.passengers = [];
 
-  this.passengerCount = count;
-
-  this.basePrice =
-    this.cruise.price *
-    this.cabin.priceMultiplier *
-    count;
-
-  this.tax = this.basePrice * 0.10;
-  this.total = booking.totalAmount;
-
-  this.generatePassengers(count);
-}
-
-generatePassengers(count: number) {
-
-  this.passengers = [];
-
-  for (let i = 0; i < count; i++) {
-    this.passengers.push({
-      firstName: '',
-      lastName: '',
-      dob: '',
-      nationality: '',
-      passport: '',
-      email: '',
-      phone: ''
-    });
+    for (let i = 0; i < count; i++) {
+      this.passengers.push({
+        firstName: '',
+        lastName: '',
+        dob: '',
+        nationality: '',
+        passport: '',
+        email: '',
+        phone: ''
+      });
+    }
   }
-}
 
   continue() {
 
@@ -94,7 +96,7 @@ generatePassengers(count: number) {
 
     this.bookingService.setPassengers(this.passengers);
     this.bookingService.setEmergency(this.emergencyContact);
-    
+
     this.router.navigate([
       '/booking',
       this.cruise.id,
@@ -108,6 +110,6 @@ generatePassengers(count: number) {
       this.cruise.id
     ]);
   }
-  
+
 
 }

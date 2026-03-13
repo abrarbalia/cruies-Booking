@@ -1,3 +1,78 @@
+// import { Injectable } from '@angular/core';
+// import {
+//   collection,
+//   getDocs,
+//   doc,
+//   getDoc,
+//   query,
+//   where
+// } from "firebase/firestore";
+// import { db } from '../firebase';
+
+// @Injectable({
+//   providedIn: 'root'
+// })
+// export class CruiseService {
+
+//   // ✅ Get all cruises
+//   async getCruises() {
+//     const cruiseCol = collection(db, "cruises");
+//     const snapshot = await getDocs(cruiseCol);
+
+//     return snapshot.docs.map(doc => ({
+//       id: doc.id,
+//       ...(doc.data() as any)
+//     }));
+//   }
+
+//   // ✅ Get search dropdown filters
+//   async getSearchFilters() {
+//     const filtersRef = doc(db, "searchOptions", "cruiseFilters");
+//     const snapshot = await getDoc(filtersRef);
+
+//     if (snapshot.exists()) {
+//       return snapshot.data();
+//     } else {
+//       return null;
+//     }
+//   }
+
+//   // ✅ Search cruises with filters
+//   async searchCruises(filters: any) {
+
+//     let cruiseRef: any = collection(db, "cruises");
+//     const conditions: any[] = [];
+
+//     if (filters.destination)
+//       conditions.push(where("destination", "==", filters.destination));
+
+//     if (filters.port)
+//       conditions.push(where("port", "==", filters.port));
+
+//     if (filters.month)
+//       conditions.push(where("month", "==", filters.month));
+
+//     if (filters.nights)
+//       conditions.push(where("nights", "==", Number(filters.nights)));
+
+//     if (conditions.length > 0)
+//       cruiseRef = query(cruiseRef, ...conditions);
+
+//     const snapshot = await getDocs(cruiseRef);
+
+//     return snapshot.docs.map(doc => ({
+//       id: doc.id,
+//       ...(doc.data() as any)
+//     }));
+//   }
+
+//   async getCruiseById(id: string) {
+//   const cruises = await this.getCruises();
+//   return cruises.find(c => c.id === id);
+// }
+
+// }
+
 import { Injectable } from '@angular/core';
 import {
   collection,
@@ -5,8 +80,12 @@ import {
   doc,
   getDoc,
   query,
-  where
+  where,
+  deleteDoc,
+  updateDoc,
+  addDoc
 } from "firebase/firestore";
+
 import { db } from '../firebase';
 
 @Injectable({
@@ -16,6 +95,7 @@ export class CruiseService {
 
   // ✅ Get all cruises
   async getCruises() {
+
     const cruiseCol = collection(db, "cruises");
     const snapshot = await getDocs(cruiseCol);
 
@@ -23,10 +103,12 @@ export class CruiseService {
       id: doc.id,
       ...(doc.data() as any)
     }));
+
   }
 
   // ✅ Get search dropdown filters
   async getSearchFilters() {
+
     const filtersRef = doc(db, "searchOptions", "cruiseFilters");
     const snapshot = await getDoc(filtersRef);
 
@@ -35,9 +117,10 @@ export class CruiseService {
     } else {
       return null;
     }
+
   }
 
-  // ✅ Search cruises with filters
+  // ✅ Search cruises
   async searchCruises(filters: any) {
 
     let cruiseRef: any = collection(db, "cruises");
@@ -64,11 +147,57 @@ export class CruiseService {
       id: doc.id,
       ...(doc.data() as any)
     }));
+
   }
 
+  // ✅ Get single cruise
   async getCruiseById(id: string) {
-  const cruises = await this.getCruises();
-  return cruises.find(c => c.id === id);
+
+    const ref = doc(db, "cruises", id);
+    const snapshot = await getDoc(ref);
+
+    if (snapshot.exists()) {
+      return {
+        id: snapshot.id,
+        ...(snapshot.data() as any)
+      };
+    }
+
+    return null;
+
+  }
+
+  // ✅ Delete cruise
+  async deleteCruise(id: string) {
+
+    const ref = doc(db, "cruises", id);
+    await deleteDoc(ref);
+
+  }
+
+  // ✅ Toggle cruise status
+async toggleCruiseStatus(id: string, currentStatus: boolean) {
+
+  const ref = doc(db, "cruises", id);
+
+  await updateDoc(ref, {
+    isActive: !currentStatus
+  });
+
+}
+async addCruise(data:any){
+
+  const ref = collection(db,"cruises");
+
+  await addDoc(ref,data);
+
 }
 
+async updateCruise(id:string,data:any){
+
+  const ref = doc(db,"cruises",id);
+
+  await updateDoc(ref,data);
+
+}
 }

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
   selector: 'app-cruise-card',
   standalone: true,
   templateUrl: './cruise-card.html',
-  styleUrls: ['./cruise-card.css']
+  styleUrls: ['./cruise-card.css'],
 })
 
 export class CruiseCard {

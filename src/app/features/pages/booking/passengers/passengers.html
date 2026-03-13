@@ -35,28 +35,17 @@
             </div>
 
             <div class="card">
-  <h4>Emergency Contact</h4>
+                <h4>Emergency Contact</h4>
 
-  <div class="grid">
-    <input
-      placeholder="Contact Name"
-      [(ngModel)]="emergencyContact.name"
-      name="emergencyName"
-    />
+                <div class="grid">
+                    <input placeholder="Contact Name" [(ngModel)]="emergencyContact.name" name="emergencyName" />
 
-    <input
-      placeholder="Phone Number"
-      [(ngModel)]="emergencyContact.phone"
-      name="emergencyPhone"
-    />
+                    <input placeholder="Phone Number" [(ngModel)]="emergencyContact.phone" name="emergencyPhone" />
 
-    <input
-      placeholder="Relationship"
-      [(ngModel)]="emergencyContact.relationship"
-      name="emergencyRelation"
-    />
-  </div>
-</div>
+                    <input placeholder="Relationship" [(ngModel)]="emergencyContact.relationship"
+                        name="emergencyRelation" />
+                </div>
+            </div>
 
             <div class="card">
                 <h4>Special Requests</h4>
@@ -105,6 +94,11 @@
             <div class="price-row">
                 <span>Port Fees</span>
                 <span>₹ {{ portFee | number }}</span>
+            </div>
+            <!-- DISCOUNT -->
+            <div class="price-row" *ngIf="discount > 0">
+                <span>Discount</span>
+                <span>- ₹ {{ discount | number }}</span>
             </div>
 
             <hr>
